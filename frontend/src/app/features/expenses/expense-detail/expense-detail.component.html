@@ -1,0 +1,85 @@
+<div class="expense-detail">
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading expense details...</p>
+  </div>
+
+  <div *ngIf="!loading && expense" class="detail-card">
+    <div class="detail-header">
+      <div>
+        <h1 class="detail-title">{{ expense.description }}</h1>
+        <div class="detail-meta">
+          <span class="meta-item">
+            <mat-icon>calendar_today</mat-icon>
+            {{ expense.date | date: 'medium' }}
+          </span>
+          <span class="meta-item" *ngIf="expense.category">
+            <mat-icon>category</mat-icon>
+            {{ expense.category.name }}
+          </span>
+        </div>
+      </div>
+      <span class="detail-amount">₹{{ expense.amount | number: '1.2-2' }}</span>
+    </div>
+
+    <div class="detail-section">
+      <h3 class="section-title">
+        <mat-icon>info</mat-icon>
+        Details
+      </h3>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <span class="detail-label">Paid By</span>
+          <span class="detail-value">{{ getPaidByName(expense.paidBy) }}</span>
+        </div>
+        <div class="detail-item" *ngIf="expense.receiptUrl">
+          <span class="detail-label">Receipt</span>
+          <a [href]="expense.receiptUrl" target="_blank" class="detail-link">View Receipt</a>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="detail-section" *ngIf="expense.shares && expense.shares.length > 0">
+      <h3 class="section-title">
+        <mat-icon>people</mat-icon>
+        Split Details
+      </h3>
+      <div class="split-list">
+        <div class="split-item" *ngFor="let share of expense.shares">
+          <div class="split-user">
+            <div class="split-avatar">
+              {{ getParticipantName(share)?.charAt(0) || '?' }}
+            </div>
+            <span class="split-name">{{ getParticipantName(share) }}</span>
+          </div>
+          <span class="split-amount">₹{{ share.shareAmount | number: '1.2-2' }}</span>
+          <span class="split-badge" [class.paid]="share.settled" [class.unpaid]="!share.settled">
+            {{ share.settled ? 'Paid' : 'Pending' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn-back" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Back
+      </button>
+      <button class="btn-edit" color="warn" (click)="deleteExpense()">
+        <mat-icon>delete</mat-icon>
+        Delete
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !expense" class="empty-state">
+    <mat-icon>error_outline</mat-icon>
+    <h3>Expense not found</h3>
+    <button class="btn-back" (click)="goBack()">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Expenses
+    </button>
+  </div>
+</div>

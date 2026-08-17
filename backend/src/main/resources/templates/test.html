@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:each="user : ${users}">
+    <h1 th:text="${user.name}">Name</h1>
+    <!-- Ctrl+Space → th: attributes? -->
+</div>
+</body>
+</html>
+

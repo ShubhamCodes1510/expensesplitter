@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="email-base :: html">
+<body>
+    <div th:fragment="templateContent">
+        <div class="message" th:if="${isPaymentReceived}">
+            Great news! You've received a payment.
+        </div>
+        <div class="message" th:unless="${isPaymentReceived}">
+            You have a settlement due.
+        </div>
+        
+        <div class="highlight">
+            <div class="detail-row">
+                <span class="detail-label" th:text="${isPaymentReceived} ? 'From:' : 'To:'">From/To:</span>
+                <span class="detail-value" th:text="${fromUser}">User</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Amount:</span>
+                <span class="detail-value" th:text="'$' + ${#numbers.formatDecimal(amount, 1, 2)}">$0.00</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value" th:text="${isPaymentReceived} ? 'Payment Received' : 'Payment Due'">Status</span>
+            </div>
+        </div>
+        
+        <div class="message" th:if="${isPaymentReceived}">
+            The payment has been recorded in the system. You can view your updated balance by clicking the button below.
+        </div>
+        <div class="message" th:unless="${isPaymentReceived}">
+            Please settle this amount at your earliest convenience. You can make the payment through the system by clicking the button below.
+        </div>
+        
+        <div style="text-align: center;">
+            <a th:href="${actionUrl}" class="button" th:text="${isPaymentReceived} ? 'View Balance' : 'Make Payment'">View/Make Payment</a>
+        </div>
+        
+        <div class="message" style="font-size: 14px; color: #777;">
+            <p th:if="${isPaymentReceived}"><strong>Note:</strong> This payment has been automatically recorded. If you believe there's an error, please contact the sender.</p>
+            <p th:unless="${isPaymentReceived}"><strong>Note:</strong> Timely settlements help maintain good relationships with your expense-sharing partners.</p>
+        </div>
+    </div>
+</body>
+</html>

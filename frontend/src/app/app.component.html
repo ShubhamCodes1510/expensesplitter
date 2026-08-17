@@ -1,0 +1,10 @@
+<div class="app-container" [class.dark-theme]="isDarkMode" *ngIf="showLayout">
+  <app-navbar></app-navbar>
+  <div class="layout">
+    <app-sidebar></app-sidebar>
+    <main class="page">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
+<router-outlet *ngIf="!showLayout"></router-outlet>

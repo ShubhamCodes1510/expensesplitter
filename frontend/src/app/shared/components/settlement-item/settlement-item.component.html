@@ -1,0 +1,9 @@
+﻿<div class="settlement-item">
+  <div class="d-flex justify-content-between">
+    <div>
+      <strong>{{ settlement?.from }} → {{ settlement?.to }}</strong>
+      <p>{{ settlement?.amount | currency }}</p>
+    </div>
+    <span [class]="'badge bg-' + settlement?.status">{{ settlement?.status }}</span>
+  </div>
+</div>

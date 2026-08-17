@@ -1,0 +1,97 @@
+﻿<div class="expenses-list">
+  <div class="header">
+    <h2>Expenses</h2>
+    <button mat-raised-button color="primary" (click)="onAddExpense()" class="add-button">
+      <mat-icon>add</mat-icon>
+      Add Expense
+    </button>
+  </div>
+
+  <div class="search-container">
+    <mat-form-field appearance="fill" class="search-field">
+      <mat-label>Search by description</mat-label>
+      <input matInput id="searchExpense" (keyup)="onSearch($event)" placeholder="Search expenses..." />
+      <button mat-icon-button matSuffix *ngIf="searchTerm" (click)="clearSearch()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading expenses...</p>
+  </div>
+
+  <div *ngIf="!loading" class="table-container">
+    <table
+      mat-table
+      [dataSource]="filteredExpenses"
+      class="expenses-table"
+      *ngIf="filteredExpenses.length > 0"
+    >
+      <!-- Description Column -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Description</th>
+        <td mat-cell *matCellDef="let element">
+          <span class="clickable" (click)="onViewExpense(element.id)">
+            {{ element.description }}
+          </span>
+        </td>
+      </ng-container>
+
+      <!-- Amount Column -->
+      <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>Amount</th>
+        <td mat-cell *matCellDef="let element">₹{{ element.amount.toFixed(2) }}</td>
+      </ng-container>
+
+      <!-- Paid By Column -->
+      <ng-container matColumnDef="paidBy">
+        <th mat-header-cell *matHeaderCellDef>Paid By</th>
+        <td mat-cell *matCellDef="let element">
+          {{ getPaidByName(element) }}
+        </td>
+      </ng-container>
+
+      <!-- Date Column -->
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let element">
+          {{ element.date | date: 'short' }}
+        </td>
+      </ng-container>
+
+      <!-- Actions Column -->
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let element" class="actions-cell">
+          <button mat-icon-button (click)="onViewExpense(element.id)" matTooltip="View Details">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            color="warn"
+            (click)="onDeleteExpense(element.id)"
+            matTooltip="Delete"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" class="expense-row"></tr>
+    </table>
+
+    <div *ngIf="filteredExpenses.length === 0" class="empty-state">
+      <mat-icon class="empty-icon">inbox</mat-icon>
+      <h3>No expenses found</h3>
+      <p *ngIf="searchTerm">Try adjusting your search criteria</p>
+      <p *ngIf="!searchTerm">Start by adding your first expense</p>
+      <button mat-raised-button color="primary" (click)="onAddExpense()">
+        <mat-icon>add</mat-icon>
+        Add Expense
+      </button>
+    </div>
+  </div>
+</div>

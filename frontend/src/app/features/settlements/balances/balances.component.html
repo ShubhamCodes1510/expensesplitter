@@ -1,0 +1,255 @@
+<div class="settlements-page">
+  <div class="page-header">
+    <div class="header-left">
+      <h1>Settlements</h1>
+      <p class="subtitle">Manage your balances and settlements</p>
+    </div>
+    <button class="refresh-btn" (click)="refreshAll()" [disabled]="loading">
+      <mat-icon [class.spinning]="loading">refresh</mat-icon>
+    </button>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="summary-row" *ngIf="!loading">
+    <div class="summary-card owe-summary">
+      <div class="summary-icon">
+        <mat-icon>trending_down</mat-icon>
+      </div>
+      <div class="summary-info">
+        <span class="summary-label">You Owe</span>
+        <span class="summary-amount owe">₹{{ totalYouOwe.toFixed(2) }}</span>
+        <span class="summary-count">{{ youOweBalances.length }} {{ youOweBalances.length === 1 ? 'person' : 'people' }}</span>
+      </div>
+    </div>
+    <div class="summary-card owed-summary">
+      <div class="summary-icon">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+      <div class="summary-info">
+        <span class="summary-label">You Are Owed</span>
+        <span class="summary-amount owed">₹{{ totalYouAreOwed.toFixed(2) }}</span>
+        <span class="summary-count">{{ youAreOwedBalances.length }} {{ youAreOwedBalances.length === 1 ? 'person' : 'people' }}</span>
+      </div>
+    </div>
+    <div class="summary-card net-summary" [class.positive]="(totalYouAreOwed - totalYouOwe) >= 0" [class.negative]="(totalYouAreOwed - totalYouOwe) < 0">
+      <div class="summary-icon">
+        <mat-icon>account_balance</mat-icon>
+      </div>
+      <div class="summary-info">
+        <span class="summary-label">Net Balance</span>
+        <span class="summary-amount" [class.owed]="(totalYouAreOwed - totalYouOwe) >= 0" [class.owe]="(totalYouAreOwed - totalYouOwe) < 0">
+          {{ (totalYouAreOwed - totalYouOwe) >= 0 ? '+' : '' }}₹{{ (totalYouAreOwed - totalYouOwe).toFixed(2) }}
+        </span>
+        <span class="summary-count">{{ (totalYouAreOwed - totalYouOwe) >= 0 ? 'Net positive' : 'Net negative' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading settlements...</p>
+  </div>
+
+  <!-- Tabs -->
+  <mat-tab-group *ngIf="!loading" class="settlement-tabs" (selectedIndexChange)="onTabChange($event)" animationDuration="300ms">
+    <!-- Tab 1: Balances -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">balance</mat-icon>
+        <span class="tab-label">Balances</span>
+        <span class="tab-badge" *ngIf="youOweBalances.length + youAreOwedBalances.length > 0">
+          {{ youOweBalances.length + youAreOwedBalances.length }}
+        </span>
+      </ng-template>
+
+      <div class="tab-content">
+        <!-- You Owe Section -->
+        <section class="balance-section" *ngIf="youOweBalances.length > 0">
+          <div class="section-header">
+            <div class="section-title-group">
+              <mat-icon class="section-icon owe">arrow_upward</mat-icon>
+              <h3>You Owe</h3>
+            </div>
+            <span class="section-total owe">Total: ₹{{ totalYouOwe.toFixed(2) }}</span>
+          </div>
+
+          <div class="balance-cards">
+            <mat-card class="balance-card owe-card" *ngFor="let balance of youOweBalances">
+              <div class="card-top">
+                <div class="user-avatar owe">
+                  {{ getInitials(balance.userName) }}
+                </div>
+                <div class="user-info">
+                  <p class="user-name">{{ balance.userName }}</p>
+                </div>
+                <div class="amount-badge owe">
+                  ₹{{ Math.abs(balance.balanceAmount || 0).toFixed(2) }}
+                </div>
+              </div>
+              <div class="card-actions">
+                <button class="btn-action btn-pay" (click)="processPayment(balance)">
+                  <mat-icon>payment</mat-icon>
+                  Pay Now
+                </button>
+                <button class="btn-action btn-settle" (click)="processPayment(balance)">
+                  <mat-icon>check_circle</mat-icon>
+                  Mark Paid
+                </button>
+              </div>
+            </mat-card>
+          </div>
+        </section>
+
+        <!-- You Are Owed Section -->
+        <section class="balance-section" *ngIf="youAreOwedBalances.length > 0">
+          <div class="section-header">
+            <div class="section-title-group">
+              <mat-icon class="section-icon owed">arrow_downward</mat-icon>
+              <h3>You Are Owed</h3>
+            </div>
+            <span class="section-total owed">Total: ₹{{ totalYouAreOwed.toFixed(2) }}</span>
+          </div>
+
+          <div class="balance-cards">
+            <mat-card class="balance-card owed-card" *ngFor="let balance of youAreOwedBalances">
+              <div class="card-top">
+                <div class="user-avatar owed">
+                  {{ getInitials(balance.userName) }}
+                </div>
+                <div class="user-info">
+                  <p class="user-name">{{ balance.userName }}</p>
+                </div>
+                <div class="amount-badge owed">
+                  ₹{{ (balance.balanceAmount || 0).toFixed(2) }}
+                </div>
+              </div>
+              <div class="card-actions">
+                <div class="awaiting-badge">
+                  <mat-icon>hourglass_top</mat-icon>
+                  Awaiting Payment
+                </div>
+              </div>
+            </mat-card>
+          </div>
+        </section>
+
+        <!-- Empty State -->
+        <div *ngIf="youOweBalances.length === 0 && youAreOwedBalances.length === 0" class="empty-state">
+          <div class="empty-icon">
+            <mat-icon>done_all</mat-icon>
+          </div>
+          <h3>All Settled!</h3>
+          <p>You have no pending balances. Everyone is even.</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Tab 2: Optimize -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">auto_fix_high</mat-icon>
+        <span class="tab-label">Optimize</span>
+      </ng-template>
+
+      <div class="tab-content">
+        <div *ngIf="optimizeLoading" class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Calculating optimal settlements...</p>
+        </div>
+
+        <div *ngIf="!optimizeLoading && settlements.length > 0" class="optimize-section">
+          <div class="optimize-info">
+            <mat-icon>info</mat-icon>
+            <p>These are the minimum transfers needed to settle all debts.</p>
+          </div>
+
+          <div class="settlement-cards">
+            <mat-card class="settlement-card" *ngFor="let s of settlements">
+              <div class="settlement-flow">
+                <div class="flow-user from">
+                  <div class="flow-avatar">{{ getInitials(s.fromUserName) }}</div>
+                  <span class="flow-name">{{ s.fromUserName }}</span>
+                  <span class="flow-badge you" *ngIf="isCurrentUser(s.fromUserId)">You</span>
+                </div>
+                <div class="flow-arrow">
+                  <div class="flow-amount">₹{{ (s.amount || 0).toFixed(2) }}</div>
+                  <mat-icon class="flow-icon">arrow_forward</mat-icon>
+                </div>
+                <div class="flow-user to">
+                  <div class="flow-avatar">{{ getInitials(s.toUserName) }}</div>
+                  <span class="flow-name">{{ s.toUserName }}</span>
+                  <span class="flow-badge you" *ngIf="isCurrentUser(s.toUserId)">You</span>
+                </div>
+              </div>
+              <div class="settlement-action" *ngIf="isCurrentUser(s.fromUserId)">
+                <button class="btn-action btn-pay" (click)="settleOptimized(s)">
+                  <mat-icon>send</mat-icon>
+                  Send Payment
+                </button>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+
+        <div *ngIf="!optimizeLoading && settlements.length === 0" class="empty-state">
+          <div class="empty-icon green">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <h3>Nothing to Optimize</h3>
+          <p>No settlements needed. All balances are zero.</p>
+        </div>
+      </div>
+    </mat-tab>
+
+    <!-- Tab 3: History -->
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon class="tab-icon">history</mat-icon>
+        <span class="tab-label">History</span>
+      </ng-template>
+
+      <div class="tab-content">
+        <div *ngIf="historyLoading" class="loading-container">
+          <mat-spinner diameter="40"></mat-spinner>
+          <p>Loading history...</p>
+        </div>
+
+        <div *ngIf="!historyLoading && history.length > 0" class="history-section">
+          <div class="history-list">
+            <div class="history-item" *ngFor="let h of history">
+              <div class="history-icon">
+                <mat-icon [class.completed]="h.isCompleted">
+                  {{ h.isCompleted ? 'check_circle' : 'schedule' }}
+                </mat-icon>
+              </div>
+              <div class="history-details">
+                <p class="history-text">
+                  <strong>{{ h.fromUserName }}</strong>
+                  paid
+                  <strong>{{ h.toUserName }}</strong>
+                </p>
+                <span class="history-date">{{ formatDateTime(h.settlementDate) }}</span>
+              </div>
+              <div class="history-amount">
+                ₹{{ (h.amount || 0).toFixed(2) }}
+              </div>
+              <div class="history-status">
+                <span class="status-chip" [class.completed]="h.isCompleted" [class.pending]="!h.isCompleted">
+                  {{ h.isCompleted ? 'Completed' : 'Pending' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="!historyLoading && history.length === 0" class="empty-state">
+          <div class="empty-icon">
+            <mat-icon>receipt_long</mat-icon>
+          </div>
+          <h3>No Settlement History</h3>
+          <p>Settlements you make will appear here.</p>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</div>

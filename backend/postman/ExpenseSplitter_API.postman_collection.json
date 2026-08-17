@@ -1,0 +1,377 @@
+{
+  "info": {
+    "_postman_id": "expense-splitter-api",
+    "name": "Expense Splitter API",
+    "description": "Complete Expense Splitter Application API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"Test1234\",\n  \"name\": \"Test User\",\n  \"phone\": \"1234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"Test1234\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/users/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"new@example.com\",\n  \"password\": \"Test1234\",\n  \"name\": \"New User\",\n  \"phone\": \"9876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "users"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Expenses",
+      "item": [
+        {
+          "name": "Add Expense",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paidBy\": {\"id\": 1},\n  \"description\": \"Dinner\",\n  \"amount\": 900.00,\n  \"date\": \"2024-01-15T18:30:00\",\n  \"shares\": [\n    {\"user\": {\"id\": 1}},\n    {\"user\": {\"id\": 2}},\n    {\"user\": {\"id\": 3}}\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/expenses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "expenses"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Expenses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/expenses",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "expenses"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Expense By ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/expenses/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "expenses", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Categories",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Category",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Food\",\n  \"description\": \"Food expenses\",\n  \"icon\": \"🍔\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/categories",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "categories"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bills",
+      "item": [
+        {
+          "name": "Get All Bills",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/bills",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bills"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Bill",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\"id\": 1},\n  \"description\": \"Electricity Bill\",\n  \"amount\": 1500.00,\n  \"frequency\": \"MONTHLY\",\n  \"nextDueDate\": \"2024-02-01T00:00:00\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/bills",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "bills"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Recurring Bills",
+      "item": [
+        {
+          "name": "Get Upcoming Bills",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/recurring-bills/upcoming",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "recurring-bills", "upcoming"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Recurring Bill",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user\": {\"id\": 1},\n  \"description\": \"Internet Bill\",\n  \"amount\": 800.00,\n  \"frequency\": \"MONTHLY\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/recurring-bills",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "recurring-bills"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Settlements",
+      "item": [
+        {
+          "name": "Calculate Settlements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settlements/calculate",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "settlements", "calculate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Balances",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settlements/balances",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "settlements", "balances"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Summary",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/settlements/summary/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "settlements", "summary", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Files",
+      "item": [
+        {
+          "name": "Upload Receipt",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/files/upload/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "files", "upload", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Receipts By Expense",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/files/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "files", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+<div class="profile-container">
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="profile-header-left">
+        <div class="avatar-section">
+          <div class="avatar">
+            <mat-icon>account_circle</mat-icon>
+          </div>
+          <button class="avatar-edit-btn" title="Change Avatar">
+            <mat-icon>camera_alt</mat-icon>
+          </button>
+        </div>
+        <div class="header-text">
+          <h2>My Profile</h2>
+          <p>Manage your account information</p>
+        </div>
+      </div>
+      <button class="edit-btn" (click)="toggleEdit()" *ngIf="!editMode">
+        <mat-icon>edit</mat-icon>
+        Edit Profile
+      </button>
+    </div>
+
+    <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <mat-form-field appearance="fill">
+          <mat-label>Full Name</mat-label>
+          <input matInput formControlName="name" [readonly]="!editMode">
+          <mat-error *ngIf="f['name'].hasError('required')">Name is required</mat-error>
+          <mat-error *ngIf="f['name'].hasError('minlength')">Name must be at least 3 characters</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" readonly>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Username</mat-label>
+          <input matInput formControlName="username" [readonly]="!editMode">
+          <mat-error *ngIf="f['username'].hasError('required')">Username is required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Phone</mat-label>
+          <input matInput formControlName="phone" [readonly]="!editMode">
+          <mat-error *ngIf="f['phone'].hasError('required')">Phone is required</mat-error>
+          <mat-error *ngIf="f['phone'].hasError('pattern')">Enter valid phone number</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="action-buttons" *ngIf="editMode">
+        <button class="cancel-btn" type="button" (click)="toggleEdit()">Cancel</button>
+        <button class="save-btn" type="submit" [disabled]="loading || profileForm.invalid">
+          <mat-spinner *ngIf="loading" diameter="18"></mat-spinner>
+          <span *ngIf="!loading">Save Changes</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="stats-card">
+    <div class="card-header">
+      <h3 class="card-title">Account Statistics</h3>
+    </div>
+    <div class="stat-item">
+      <mat-icon>receipt</mat-icon>
+      <div class="stat-info">
+        <span class="stat-label">Total Expenses</span>
+        <span class="stat-value">0</span>
+      </div>
+    </div>
+    <div class="stat-item">
+      <mat-icon>group</mat-icon>
+      <div class="stat-info">
+        <span class="stat-label">Groups</span>
+        <span class="stat-value">0</span>
+      </div>
+    </div>
+    <div class="stat-item">
+      <mat-icon>calendar_today</mat-icon>
+      <div class="stat-info">
+        <span class="stat-label">Member Since</span>
+        <span class="stat-value">2024</span>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+﻿<div class="quick-actions">
+  <div class="row">
+    <div *ngFor="let action of actions" class="col-3">
+      <div class="action-item" (click)="action.action()">
+        <i [class]="action.icon"></i>
+        <span>{{ action.label }}</span>
+      </div>
+    </div>
+  </div>
+</div>

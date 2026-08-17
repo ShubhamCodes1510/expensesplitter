@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="email-base :: html">
+<body>
+    <div th:fragment="templateContent">
+        <div class="message">
+            A new expense has been added that involves you.
+        </div>
+        
+        <div class="highlight">
+            <div class="detail-row">
+                <span class="detail-label">Description:</span>
+                <span class="detail-value" th:text="${expenseDescription}">Expense Description</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Amount:</span>
+                <span class="detail-value" th:text="'$' + ${#numbers.formatDecimal(amount, 1, 2)}">$0.00</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Paid By:</span>
+                <span class="detail-value" th:text="${paidBy}">User</span>
+            </div>
+        </div>
+        
+        <div class="message">
+            This expense has been recorded in the system. You can view the details and manage your share by clicking the button below.
+        </div>
+        
+        <div style="text-align: center;">
+            <a th:href="${actionUrl}" class="button">View Expense Details</a>
+        </div>
+        
+        <div class="message" style="font-size: 14px; color: #777;">
+            <p><strong>Note:</strong> If this expense was split equally among participants, your share has been calculated automatically. For custom splits, please check the expense details.</p>
+        </div>
+    </div>
+</body>
+</html>

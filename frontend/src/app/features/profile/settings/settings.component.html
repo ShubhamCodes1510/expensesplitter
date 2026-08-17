@@ -1,0 +1,79 @@
+<div class="settings-page">
+  <div class="page-header">
+    <h1 class="page-title"><span>Profile</span> Settings</h1>
+    <p class="page-subtitle">Manage your account information</p>
+  </div>
+
+  <div class="settings-card">
+    <div class="card-header">
+      <div class="header-icon">
+        <mat-icon>person</mat-icon>
+      </div>
+      <div class="header-text">
+        <h3>Personal Information</h3>
+        <p>Update your profile details</p>
+      </div>
+    </div>
+
+    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label class="form-label" for="name">Full Name</label>
+        <input id="name" name="name" type="text" formControlName="name" class="form-input" placeholder="Enter your full name" />
+        <span class="error-text" *ngIf="f['name'].hasError('required') && f['name'].touched">
+          Name is required
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="username">Username</label>
+        <input id="username" name="username" type="text" formControlName="username" class="form-input" placeholder="Enter your username" />
+        <span class="error-text" *ngIf="f['username'].hasError('required') && f['username'].touched">
+          Username is required
+        </span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="email">Email Address</label>
+        <input id="email" name="email" type="email" formControlName="email" class="form-input form-input-disabled" placeholder="Enter your email" [attr.disabled]="true" />
+        <span class="form-hint">Email cannot be changed</span>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="phone">Phone Number</label>
+        <input id="phone" name="phone" type="tel" formControlName="phone" class="form-input" placeholder="Enter your phone number" />
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="loading || userForm.invalid" class="btn-save">
+          <mat-spinner *ngIf="loading" diameter="18"></mat-spinner>
+          <mat-icon *ngIf="!loading">save</mat-icon>
+          <span *ngIf="!loading">Save Changes</span>
+          <span *ngIf="loading">Saving...</span>
+        </button>
+      </div>
+    </form>
+
+    <div class="theme-section" *ngIf="currentUser">
+      <div class="card-header" style="border-top: 1px solid var(--color-border-light); padding-top: 24px; margin-top: 24px;">
+        <div class="header-icon" style="background: linear-gradient(135deg, #10B981 0%, #34D399 100%);">
+          <mat-icon>account_circle</mat-icon>
+        </div>
+        <div class="header-text">
+          <h3>Account Information</h3>
+          <p>Your account details</p>
+        </div>
+      </div>
+
+      <div class="info-grid" style="margin-top: 20px;">
+        <div class="info-item">
+          <span class="info-label">User ID</span>
+          <span class="info-value">#{{ currentUser.id }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Status</span>
+          <span class="info-badge">Active</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

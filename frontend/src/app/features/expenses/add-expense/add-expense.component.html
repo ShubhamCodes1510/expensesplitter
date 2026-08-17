@@ -1,0 +1,352 @@
+<div class="add-expense-container">
+  <div class="page-header">
+    <h1 class="page-title"><span>Add New</span> Expense</h1>
+    <p class="page-subtitle">Track and split expenses with your group</p>
+  </div>
+
+  <mat-card class="expense-form-card">
+    <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()">
+      <div class="form-grid">
+        <!-- Description -->
+        <mat-form-field appearance="fill" class="form-full form-field">
+          <mat-label>Description</mat-label>
+          <input matInput formControlName="description" placeholder="e.g., Dinner, Movie tickets"
+                 (input)="onDescriptionChange()" />
+          <mat-icon matPrefix>description</mat-icon>
+          <mat-error *ngIf="f['description'].hasError('required')">Description is required</mat-error>
+          <mat-error *ngIf="f['description'].hasError('minlength')">Must be at least 3 characters</mat-error>
+        </mat-form-field>
+
+        <!-- Amount -->
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Amount</mat-label>
+          <span matPrefix>₹ </span>
+          <input matInput type="number" formControlName="amount" placeholder="0.00" step="0.01" (input)="onAmountChange()" />
+          <mat-error *ngIf="f['amount'].hasError('required')">Amount is required</mat-error>
+          <mat-error *ngIf="f['amount'].hasError('min')">Amount must be greater than 0</mat-error>
+        </mat-form-field>
+
+        <!-- Category -->
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Category</mat-label>
+          <mat-select formControlName="category">
+            <mat-option value="">None</mat-option>
+            <mat-option *ngFor="let cat of categories" [value]="cat.id">
+              {{ cat.name }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>category</mat-icon>
+        </mat-form-field>
+
+        <!-- Category Suggestions -->
+        <div class="category-suggestions" *ngIf="showCategorySuggestions && suggestedCategories.length > 0">
+          <div class="suggestions-header">
+            <mat-icon>lightbulb</mat-icon>
+            <span>Suggested categories based on your description</span>
+          </div>
+          <div class="suggestions-list">
+            <button
+              type="button"
+              class="suggestion-chip"
+              *ngFor="let cat of suggestedCategories"
+              (click)="selectSuggestedCategory(cat)"
+            >
+              <mat-icon>category</mat-icon>
+              <span>{{ cat.name }}</span>
+              <mat-icon class="chip-icon">arrow_forward</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Date -->
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <!-- Paid By -->
+        <mat-form-field appearance="fill" class="form-field">
+          <mat-label>Paid By</mat-label>
+          <mat-select formControlName="paidBy">
+            <mat-option *ngFor="let user of users" [value]="user.id">
+              {{ user.name }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error *ngIf="f['paidBy'].hasError('required')">Select who paid</mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Comments -->
+      <mat-form-field appearance="fill" class="form-full form-field">
+        <mat-label>Comments (Optional)</mat-label>
+        <textarea matInput formControlName="comments" rows="2" placeholder="Add any additional details..."></textarea>
+        <mat-icon matPrefix>note</mat-icon>
+      </mat-form-field>
+
+      <mat-divider class="form-divider"></mat-divider>
+
+      <!-- Split Section -->
+      <div class="section-header">
+        <mat-icon>group_add</mat-icon>
+        <h3>Split with people</h3>
+      </div>
+
+      <div class="gpay-split-section">
+        <!-- Split Type Toggle -->
+        <div class="split-type-toggle" *ngIf="selectedUsers.length > 0">
+          <span class="toggle-label">Split type</span>
+          <mat-button-toggle-group [(value)]="splitType" (change)="toggleSplitType($event.value)">
+            <mat-button-toggle value="EQUAL">
+              <mat-icon>balance</mat-icon>
+              <span>Equal</span>
+            </mat-button-toggle>
+            <mat-button-toggle value="CUSTOM">
+              <mat-icon>edit</mat-icon>
+              <span>Custom</span>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+        </div>
+
+        <!-- User Chips with Custom Amounts -->
+        <div class="gpay-chips-container" *ngIf="selectedUsers.length > 0">
+          <div class="gpay-chip" *ngFor="let userId of selectedUsers" [class.custom-mode]="splitType === 'CUSTOM'" [class.error-chip]="splitType === 'CUSTOM' && getRemainingAmount() > 0.01">
+            <div class="chip-avatar">
+              {{ getInitial(getUserName(userId)) }}
+            </div>
+            <span class="chip-name">{{ getUserName(userId) }}</span>
+            <div class="chip-amount-container" *ngIf="splitType === 'CUSTOM'">
+              <span class="currency-symbol">₹</span>
+              <input
+                type="number"
+                class="chip-amount-input"
+                [(ngModel)]="customAmounts[userId]"
+                [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="onCustomAmountChange(userId, $event)"
+                (focus)="onInputFocus(userId)"
+                (blur)="onInputBlur(userId)"
+                placeholder="0"
+                step="0.01"
+                min="0"
+              />
+            </div>
+            <span class="chip-amount" *ngIf="splitType === 'EQUAL'">₹{{ calculateShareAmount(userId).toFixed(0) }}</span>
+            <button type="button" class="chip-remove" (click)="onUserSelection(userId, false)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <button type="button" class="gpay-add-btn" (click)="toggleUserSelector()">
+          <mat-icon>{{ showUserSelector ? 'remove_circle' : 'add_circle' }}</mat-icon>
+          <span>{{ showUserSelector ? 'Done selecting' : 'Add people to split' }}</span>
+        </button>
+
+        <div class="gpay-user-selector" *ngIf="showUserSelector">
+          <div class="user-list">
+            <div 
+              class="user-item" 
+              *ngFor="let user of users"
+              [class.selected]="isUserSelected(user.id?.toString() || '')"
+              (click)="toggleUser(user.id?.toString() || '')"
+            >
+              <div class="user-item-avatar">
+                {{ getInitial(user.name) }}
+              </div>
+              <div class="user-item-info">
+                <span class="user-item-name">{{ user.name }}</span>
+                <span class="user-item-email">{{ user.email }}</span>
+              </div>
+              <div class="user-item-check">
+                <mat-icon>{{ isUserSelected(user.id?.toString() || '') ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gpay-split-summary" *ngIf="selectedUsers.length > 0">
+          <div class="split-summary-row">
+            <span>Total Amount</span>
+            <span class="summary-value">₹{{ expenseForm.get('amount')?.value || 0 }}</span>
+          </div>
+          <div class="split-summary-row">
+            <span>Split between</span>
+            <span class="summary-value">{{ selectedUsers.length }} people</span>
+          </div>
+          
+          <!-- Equal Split Summary -->
+          <div class="split-summary-row highlight" *ngIf="splitType === 'EQUAL'">
+            <span>Each person pays</span>
+            <span class="summary-value each">₹{{ getEqualShare().toFixed(2) }}</span>
+          </div>
+          
+          <!-- Custom Split Summary -->
+          <div class="split-summary-row highlight" *ngIf="splitType === 'CUSTOM'">
+            <span>Total assigned</span>
+            <span class="summary-value each" [class.error]="!isCustomAmountValid()">
+              ₹{{ getTotalCustomAmount().toFixed(2) }}
+            </span>
+          </div>
+          
+          <div class="split-summary-row warning" *ngIf="splitType === 'CUSTOM' && !isCustomAmountValid()">
+            <div class="remaining-amount-alert">
+              <mat-icon>warning</mat-icon>
+              <div class="alert-content">
+                <span *ngIf="getRemainingAmount() > 0.01">
+                  <strong>₹{{ getRemainingAmount().toFixed(2) }} remaining</strong> - Distribute among {{ selectedUsers.length }} people
+                </span>
+                <span *ngIf="getRemainingAmount() < -0.01" class="over-amount">
+                  <strong>Over by ₹{{ (-getRemainingAmount()).toFixed(2) }}</strong> - Reduce amounts to match total
+                </span>
+                <div class="alert-actions" *ngIf="getRemainingAmount() > 0.01">
+                  <button
+                    type="button"
+                    class="alert-action-btn primary"
+                    (click)="distributeRemaining()">
+                    <mat-icon>auto_fix_high</mat-icon>
+                    <span>Auto Distribute Remaining</span>
+                  </button>
+                  <button
+                    type="button"
+                    class="alert-action-btn secondary"
+                    (click)="autoDistribute()">
+                    <mat-icon>refresh</mat-icon>
+                    <span>Reset All to Equal Split</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="split-actions" *ngIf="splitType === 'CUSTOM' && isCustomAmountValid()">
+            <button
+              type="button"
+              class="action-btn equal-btn"
+              (click)="autoDistribute()">
+              <mat-icon>refresh</mat-icon>
+              <span>Reset to Equal Split</span>
+            </button>
+            <button
+              type="button"
+              class="action-btn distribute-btn-custom"
+              (click)="distributeRemaining()">
+              <mat-icon>balance</mat-icon>
+              <span>Recalculate Evenly</span>
+            </button>
+          </div>
+        </div>
+
+        <mat-error *ngIf="selectedUsers.length === 0 && submitted" class="error-message">
+          Select at least one person to split with
+        </mat-error>
+      </div>
+
+      <!-- Recurring Section -->
+      <div class="recurring-section">
+        <mat-slide-toggle formControlName="isRecurring" color="primary">
+          <mat-icon>repeat</mat-icon>
+          Recurring Expense
+        </mat-slide-toggle>
+        
+        <mat-form-field appearance="fill" class="form-full form-field" *ngIf="expenseForm.get('isRecurring')?.value" style="margin-top: 16px;">
+          <mat-label>Frequency</mat-label>
+          <mat-select formControlName="frequency">
+            <mat-option *ngFor="let freq of frequencies" [value]="freq.value">
+              {{ freq.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <mat-divider class="form-divider"></mat-divider>
+
+      <!-- Receipt Upload -->
+      <div class="receipt-upload-section">
+        <div class="section-header">
+          <mat-icon>receipt_long</mat-icon>
+          <h3>Receipts (Optional)</h3>
+        </div>
+        
+        <div class="whatsapp-upload-container">
+          <button
+            type="button"
+            class="wa-upload-btn"
+            (click)="toggleUploadOptions()"
+            [disabled]="uploadingReceipt"
+          >
+            <mat-spinner *ngIf="uploadingReceipt" diameter="20"></mat-spinner>
+            <mat-icon *ngIf="!uploadingReceipt">attach_file</mat-icon>
+          </button>
+
+          <div class="wa-upload-options" *ngIf="showUploadOptions">
+            <button type="button" class="wa-option-btn" (click)="onCameraCapture()">
+              <mat-icon>camera_alt</mat-icon>
+              <span>Camera</span>
+            </button>
+            <button type="button" class="wa-option-btn" (click)="fileInput.click()">
+              <mat-icon>photo_library</mat-icon>
+              <span>Gallery</span>
+            </button>
+            <button
+              type="button"
+              class="wa-option-btn ocr-option"
+              *ngIf="receiptFiles.length > 0"
+              (click)="scanReceiptForOCR(receiptFiles[0])"
+              [disabled]="scanningReceipt"
+            >
+              <mat-spinner *ngIf="scanningReceipt" diameter="16"></mat-spinner>
+              <mat-icon *ngIf="!scanningReceipt">document_scanner</mat-icon>
+              <span>{{ scanningReceipt ? 'Scanning...' : 'Scan Receipt' }}</span>
+            </button>
+            <input
+              type="file"
+              #fileInput
+              (change)="onFileSelected($event)"
+              accept="image/*,.pdf,.doc,.docx"
+              hidden
+            />
+          </div>
+
+          <div class="wa-file-preview" *ngIf="receiptFiles.length > 0">
+            <div class="wa-preview-card" *ngFor="let file of receiptFiles; let i = index">
+              <button type="button" class="wa-remove-btn" (click)="removeReceipt(i)">
+                <mat-icon>close</mat-icon>
+              </button>
+              
+              <div *ngIf="filePreviewUrls[i]" class="wa-image-preview">
+                <img [src]="filePreviewUrls[i]" alt="Preview" />
+              </div>
+              
+              <div *ngIf="!filePreviewUrls[i]" class="wa-file-info">
+                <mat-icon>description</mat-icon>
+                <span class="wa-file-name">{{ file.name }}</span>
+                <span class="wa-file-size">{{ formatFileSize(file.size) }}</span>
+              </div>
+              
+              <div *ngIf="receiptUrls[i] && !uploadingReceipt" class="wa-uploaded-badge">
+                <mat-icon>check_circle</mat-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="form-actions">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="loading"
+          class="submit-button"
+        >
+          <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
+          <span *ngIf="!loading">Create Expense</span>
+        </button>
+        <button mat-stroked-button type="button" routerLink="/expenses" class="cancel-button">Cancel</button>
+      </div>
+    </form>
+  </mat-card>
+</div>

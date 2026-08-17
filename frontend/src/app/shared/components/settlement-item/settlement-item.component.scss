@@ -1,0 +1,115 @@
+.settlement-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background: var(--color-surface);
+  border-radius: 16px;
+  border: 1px solid var(--color-border-light);
+  transition: all 0.2s ease;
+  animation: slideIn 0.3s ease-out;
+
+  &:hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.user-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #818CF8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 18px;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+}
+
+.user-details {
+  .user-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin: 0 0 2px 0;
+  }
+
+  .user-email {
+    font-size: 12px;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+}
+
+.amount-info {
+  text-align: right;
+
+  .amount {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .amount.owe {
+    color: var(--color-danger);
+  }
+
+  .amount.owed {
+    color: var(--color-success);
+  }
+
+  .label {
+    font-size: 11px;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #818CF8 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+  }
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 6px;
+  }
+}

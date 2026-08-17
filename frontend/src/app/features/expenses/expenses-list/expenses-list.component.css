@@ -1,0 +1,250 @@
+.expenses-list {
+  padding: var(--spacing-lg);
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  letter-spacing: -0.5px;
+}
+
+.add-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-container {
+  margin-bottom: 24px;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.search-field {
+  flex: 1;
+  min-width: 250px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 16px;
+}
+
+.loading-container p {
+  font-size: 16px;
+  color: var(--color-text-muted);
+}
+
+.table-container {
+  background: var(--color-surface);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  border: 1px solid var(--color-border-light);
+}
+
+.expenses-table {
+  width: 100%;
+  font-size: 14px;
+}
+
+.expenses-table th {
+  background: linear-gradient(135deg, var(--color-background) 0%, var(--color-surface) 100%);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  padding: 18px 16px !important;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.expenses-table td {
+  padding: 18px 16px !important;
+  border-bottom: 1px solid var(--color-border-light);
+  color: var(--color-text-primary);
+}
+
+.expense-row {
+  transition: all 0.2s ease;
+}
+
+.expense-row:hover {
+  background: var(--color-background);
+}
+
+.expense-row:hover .clickable {
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.clickable {
+  cursor: pointer;
+  color: var(--color-primary);
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.clickable:hover {
+  text-decoration: underline;
+}
+
+.actions-cell {
+  text-align: center;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(129, 140, 248, 0.05) 100%);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+}
+
+.amount-cell {
+  font-weight: 700;
+  color: var(--color-primary);
+  font-size: 16px;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  background: var(--color-surface);
+  border-radius: 24px;
+  border: 2px dashed var(--color-border);
+}
+
+.empty-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: var(--color-text-muted);
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  margin: 0 0 8px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.empty-state p {
+  margin: 0 0 24px 0;
+  color: var(--color-text-muted);
+  font-size: 15px;
+}
+
+/* Filter Section */
+.filter-section {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: var(--color-surface);
+  border-radius: 16px;
+  border: 1px solid var(--color-border-light);
+}
+
+.filter-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: var(--color-background);
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-chip:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+.filter-chip.active {
+  background: var(--color-primary);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .expenses-list {
+    padding: 16px;
+  }
+  
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .header h2 {
+    font-size: 24px;
+  }
+  
+  .search-container {
+    flex-direction: column;
+  }
+  
+  .search-field {
+    min-width: 100%;
+  }
+  
+  .filter-section {
+    padding: 12px;
+  }
+  
+  .expenses-table th {
+    font-size: 11px;
+    padding: 12px 8px !important;
+  }
+  
+  .expenses-table td {
+    padding: 12px 8px !important;
+    font-size: 13px;
+  }
+  
+  .displayedColumns {
+    display: none;
+  }
+}

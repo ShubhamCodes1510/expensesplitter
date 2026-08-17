@@ -1,0 +1,123 @@
+.expense-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid var(--color-border-light);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.expense-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary) 0%, #818CF8 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.expense-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.15);
+  border-color: var(--color-primary);
+}
+
+.expense-card:hover::before {
+  opacity: 1;
+}
+
+.expense-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.1) 0%, rgba(129, 140, 248, 0.05) 100%);
+  color: var(--color-primary);
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.expense-date {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.expense-body {
+  margin-bottom: 16px;
+}
+
+.expense-description {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 6px 0;
+  line-height: 1.4;
+}
+
+.expense-paid-by {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.expense-paid-by mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: var(--color-text-muted);
+}
+
+.expense-paid-by strong {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.expense-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.expense-split {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.expense-split mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.expense-amount {
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #818CF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

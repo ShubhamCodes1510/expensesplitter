@@ -1,0 +1,345 @@
+.balances {
+  max-width: var(--content-max-width, 1200px);
+  padding: var(--spacing-lg);
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 32px 0;
+  letter-spacing: -0.5px;
+}
+
+.page-title span {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #818CF8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  gap: 16px;
+
+  p {
+    font-size: 16px;
+    color: var(--color-text-muted);
+  }
+}
+
+.content {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.balance-section {
+  margin-bottom: 40px;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 20px 0;
+
+  mat-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.owe-icon {
+  color: var(--color-danger);
+}
+
+.owed-icon {
+  color: var(--color-success);
+}
+
+.balance-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.balance-card {
+  background: var(--color-surface);
+  border-radius: 20px;
+  padding: 24px;
+  border: 1px solid var(--color-border-light);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+  animation: cardSlideIn 0.4s ease-out;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+  }
+}
+
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-header-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #818CF8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 700;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.owe-card .user-avatar {
+  background: linear-gradient(135deg, var(--color-danger) 0%, #F87171 100%);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.owed-card .user-avatar {
+  background: linear-gradient(135deg, var(--color-success) 0%, #34D399 100%);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 4px 0;
+}
+
+.user-email {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.amount-section {
+  margin-bottom: 20px;
+}
+
+.amount-display {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.amount-display .label {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.amount-display .amount {
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.amount.owe {
+  color: var(--color-danger);
+}
+
+.amount.owed {
+  color: var(--color-success);
+}
+
+.card-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.pay-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, #818CF8 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+  }
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.settle-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  border: 2px solid var(--color-border);
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-success);
+    background: var(--color-success-light);
+    color: var(--color-success);
+  }
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.awaiting-badge {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--color-success-light);
+  color: var(--color-success);
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+mat-divider {
+  margin: 32px 0 !important;
+  border-color: var(--color-border-light) !important;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  text-align: center;
+  background: var(--color-surface);
+  border-radius: 24px;
+  border: 2px dashed var(--color-border);
+  animation: fadeIn 0.4s ease-out;
+}
+
+.empty-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-success) 0%, #34D399 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: white;
+  }
+}
+
+.empty-state h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 8px 0;
+}
+
+.empty-state p {
+  color: var(--color-text-muted);
+  margin: 0;
+  font-size: 15px;
+}
+
+@media (max-width: 768px) {
+  .balances {
+    padding: 16px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .balance-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,26 @@
+<div class="expense-card" [routerLink]="['/expenses', expense.id]">
+  <div class="expense-header">
+    <div class="expense-category" *ngIf="expense.category">
+      <span class="category-badge">{{ expense.category.name }}</span>
+    </div>
+    <span class="expense-date">{{ expense.date | date:'MMM d, y' }}</span>
+  </div>
+
+  <div class="expense-body">
+    <h4 class="expense-description">{{ expense.description }}</h4>
+    <p class="expense-paid-by">
+      <mat-icon>person</mat-icon>
+      Paid by <strong>{{ getPaidByName() }}</strong>
+    </p>
+  </div>
+
+  <div class="expense-footer">
+    <div class="expense-split">
+      <mat-icon>group</mat-icon>
+      <span>{{ getSplitCount() }} people</span>
+    </div>
+    <div class="expense-amount">
+      ₹{{ expense.amount | number:'1.2-2' }}
+    </div>
+  </div>
+</div>
