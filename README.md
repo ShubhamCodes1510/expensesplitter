@@ -71,9 +71,29 @@ expensesplitter/
 CREATE DATABASE expense_splitter;
 ```
 
-Default credentials are `root`/`root`. Update `backend/src/main/resources/application.properties` if different.
+### 2. Environment Variables
 
-### 2. Backend
+Create a `.env` file in the `backend/` directory (this file is gitignored):
+
+```properties
+DB_URL=jdbc:mysql://localhost:3306/expense_splitter?createDatabaseIfNotExist=true&serverTimezone=UTC&allowPublicKeyRetrieval=true
+DB_USERNAME=your_mysql_username
+DB_PASSWORD=your_mysql_password
+JWT_SECRET=your_random_secret_key_at_least_32_chars_long
+```
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `DB_URL` | Yes | MySQL connection URL |
+| `DB_USERNAME` | Yes | Database username |
+| `DB_PASSWORD` | Yes | Database password |
+| `JWT_SECRET` | Yes | Secret key for JWT signing (min 32 chars) |
+| `JWT_EXPIRATION` | No | Token expiry in ms (default: 86400000 = 24h) |
+| `EMAIL_USERNAME` | No | SMTP email for notifications |
+| `EMAIL_PASSWORD` | No | SMTP password |
+| `SWAGGER_ENABLED` | No | Enable Swagger UI (default: false) |
+
+### 3. Backend
 
 ```bash
 cd backend
@@ -82,7 +102,7 @@ cd backend
 
 Backend runs on `http://localhost:8080`.
 
-### 3. Frontend
+### 4. Frontend
 
 ```bash
 cd frontend
@@ -91,18 +111,6 @@ npm start
 ```
 
 Frontend runs on `http://localhost:4200`.
-
-### 4. Environment Variables (Optional)
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DB_URL` | `jdbc:mysql://localhost:3306/expense_splitter` | MySQL connection URL |
-| `DB_USERNAME` | `root` | Database username |
-| `DB_PASSWORD` | `root` | Database password |
-| `JWT_SECRET` | (built-in) | Secret key for JWT signing |
-| `JWT_EXPIRATION` | `86400000` | Token expiry in ms (24h) |
-| `EMAIL_USERNAME` | | SMTP email |
-| `EMAIL_PASSWORD` | | SMTP password |
 
 ## API Endpoints
 
@@ -122,14 +130,7 @@ Frontend runs on `http://localhost:4200`.
 | GET | `/api/reports/settlements/csv` | Export settlements CSV |
 | GET | `/api/reports/summary/html` | View summary report |
 
-Swagger UI available at `http://localhost:8080/swagger-ui.html`.
-
-## Default Users
-
-| Email | Password |
-|-------|----------|
-| john@example.com | password |
-| jane@example.com | password |
+Swagger UI available at `http://localhost:8080/swagger-ui.html` (when `SWAGGER_ENABLED=true`).
 
 ## License
 

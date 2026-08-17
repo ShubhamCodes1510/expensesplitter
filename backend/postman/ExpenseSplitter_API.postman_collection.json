@@ -10,6 +10,21 @@
       "key": "baseUrl",
       "value": "http://localhost:8080",
       "type": "string"
+    },
+    {
+      "key": "testUsername",
+      "value": "your_test_username",
+      "type": "string"
+    },
+    {
+      "key": "testEmail",
+      "value": "your_test_email@example.com",
+      "type": "string"
+    },
+    {
+      "key": "testPassword",
+      "value": "your_test_password",
+      "type": "string"
     }
   ],
   "item": [
@@ -28,7 +43,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"Test1234\",\n  \"name\": \"Test User\",\n  \"phone\": \"1234567890\"\n}"
+              "raw": "{\n  \"username\": \"{{testUsername}}\",\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"{{testPassword}}\",\n  \"name\": \"Test User\",\n  \"phone\": \"1234567890\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/register",
@@ -50,7 +65,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"Test1234\"\n}"
+              "raw": "{\n  \"username\": \"{{testUsername}}\",\n  \"password\": \"{{testPassword}}\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/auth/login",
@@ -103,7 +118,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"username\": \"newuser\",\n  \"email\": \"new@example.com\",\n  \"password\": \"Test1234\",\n  \"name\": \"New User\",\n  \"phone\": \"9876543210\"\n}"
+              "raw": "{\n  \"username\": \"{{testUsername}}\",\n  \"email\": \"{{testEmail}}\",\n  \"password\": \"{{testPassword}}\",\n  \"name\": \"New User\",\n  \"phone\": \"9876543210\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/api/users",
